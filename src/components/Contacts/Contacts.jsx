@@ -1,25 +1,42 @@
 import ContactItem from 'components/ContactItem';
 import PropTypes from 'prop-types';
 import { ContactsList } from './Contacts.styled';
-import { useSelector} from 'react-redux'
-import { getContact } from 'redux/contactsSlice';
 
-const Contacts = () => {
-  const contacts = useSelector(getContact);
+const Contacts = ({ filter, onClick, contacts, inputRef }) => {
 
-  return (
-    <ContactsList>
-      {contacts.map(({ id, name, number }) => (
-        <ContactItem
-          key={id}
-          name={name.trim()}
-          number={number}
-          // deleteContact={deleteContact}
-          id={id}
-        />
-      ))}
-    </ContactsList>
-  );
+  if (contacts.length === 0) {
+    return <h2>No contacts</h2>;
+  } else if (inputRef === '') {
+    return (
+      <ContactsList>
+        {contacts &&
+          contacts.map(({ id, name, number }) => (
+            <ContactItem
+              key={id}
+              name={name}
+              number={number}
+              onClick={onClick}
+              id={id}
+            />
+          ))}
+      </ContactsList>
+    );
+  } else {
+    return (
+      <ContactsList>
+        {filter &&
+          filter.map(({ id, name, number }) => (
+            <ContactItem
+              key={id}
+              name={name}
+              number={number}
+              onClick={onClick}
+              id={id}
+            />
+          ))}
+      </ContactsList>
+    );
+  }
 };
 
 Contacts.propTypes = {

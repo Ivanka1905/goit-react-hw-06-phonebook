@@ -1,15 +1,11 @@
 import PropTypes from 'prop-types';
 import { Label, Input } from './Filter.styled';
-import { useSelector, useDispatch } from 'react-redux'
-import { filterContactAction, getFilter} from 'redux/contactsSlice';
 
-const Filter = () => {
-  const filter = useSelector(getFilter)
-  const dispatch = useDispatch();
+const Filter = ({ filter, onChange }) => {
   return (
     <Label>
       Find contact by name
-      <Input type="text" value={filter} onChange={()=>{dispatch(filterContactAction(filter.toLowerCase()))}}></Input>
+      <Input type="text" value={filter} onChange={onChange}></Input>
     </Label>
   );
 };
