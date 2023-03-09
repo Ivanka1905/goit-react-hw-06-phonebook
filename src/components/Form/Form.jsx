@@ -1,11 +1,32 @@
 import React from 'react';
+import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import { FormEl, Label, Input, Button } from './Form.styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContactAction } from 'redux/contactsSlice';
 
-const Form = ({onSubmit}) => {
+const Form = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contact);
+
+  const addNewContact = e => {
+    e.preventDefault();
+
+    const name = e.target.name.value;
+    const number = e.target.number.value;
+
+    if (contacts.find(contacts => contacts.name === name)) {
+      alert(`${name} is already in contacts.`);
+    } else {
+      dispatch(addContactAction([...contacts, { id: nanoid(), name, number }]));
+    }
+
+    e.target.name.value = '';
+    e.target.number.value = '';
+  };
 
   return (
-    <FormEl onSubmit={onSubmit}>
+    <FormEl onSubmit={addNewContact}>
       <Label>
         Name
         <Input

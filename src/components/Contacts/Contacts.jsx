@@ -1,8 +1,23 @@
 import ContactItem from 'components/ContactItem';
 import PropTypes from 'prop-types';
 import { ContactsList } from './Contacts.styled';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRef } from 'react';
+import { addContactAction } from 'redux/contactsSlice';
 
-const Contacts = ({ filter, onClick, contacts, inputRef }) => {
+const Contacts = () => {
+  const inputRef = useRef('');
+  const contacts = useSelector(state => state.contacts.contact);
+  const filter = useSelector(state => state.contacts.filter);
+  const dispatch = useDispatch();
+
+  const deleteContact = deleteId => {
+    dispatch(addContactAction(contacts.filter(c => c.id !== deleteId)));
+  };
+
+  const filteredContactsList = contacts.filter(name =>
+    name.name.toLocaleLowerCase().includes(filter)
+  );
 
   if (contacts.length === 0) {
     return <h2>No contacts</h2>;
@@ -15,7 +30,7 @@ const Contacts = ({ filter, onClick, contacts, inputRef }) => {
               key={id}
               name={name}
               number={number}
-              onClick={onClick}
+              onClick={deleteContact}
               id={id}
             />
           ))}
@@ -24,13 +39,13 @@ const Contacts = ({ filter, onClick, contacts, inputRef }) => {
   } else {
     return (
       <ContactsList>
-        {filter &&
-          filter.map(({ id, name, number }) => (
+        {filteredContactsList &&
+          filteredContactsList.map(({ id, name, number }) => (
             <ContactItem
               key={id}
               name={name}
               number={number}
-              onClick={onClick}
+              onClick={deleteContact}
               id={id}
             />
           ))}
